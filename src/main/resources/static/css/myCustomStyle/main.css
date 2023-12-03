@@ -1,0 +1,206 @@
+/* 차트 */
+.pie-chart {
+  position: relative;
+  display:inline-block;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+span.center{
+  background: #fff;
+  display : block;
+  position: absolute;
+  top:50%; left:50%;
+  width:100px; height:100px;
+  border-radius: 50%;
+  text-align:center; 
+  line-height: 100px;
+  font-size:30px;
+   transform: translate(-50%, -50%);
+}
+
+
+/* btn */
+
+.top-btn-p{
+  margin-bottom: 0px; 
+  text-align: left; 
+  width: 320px; 
+  vertical-align: middle;
+}
+
+
+/* 버튼 아이콘 */
+  #my-app-list button{
+    padding:6px 10px 6px 10px;
+    background: white;
+  }
+  #my-app-list button:hover{
+    background: rgb(222,226,230);
+  }
+
+  #app-list button{
+    padding:6px 10px 6px 10px;
+    background: white;
+  }
+  #app-list button:hover{
+    background: rgb(222,226,230);
+  }
+
+  #message-list button{
+    padding:6px 10px 6px 10px;
+    background: white;
+  }
+  #message-list button:hover{
+    background: rgb(222,226,230);
+  }
+
+  #notice-list button{
+    padding:6px 10px 6px 10px;
+    background: white;
+  }
+  #notice-list button:hover{
+    background: rgb(222,226,230);
+  }
+
+
+
+  /* 메인 상단 버튼 */
+  .main-btn,.main-btn-check{
+    padding:0;
+    height: 35.5px;
+    width: 30px;
+    
+    border:white;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    margin-left:2px;
+  }
+  .main-btn-check{
+    border-bottom-right-radius: 0;
+  }
+
+  .main-btn{
+    border-top-right-radius: 0;
+  }
+
+  .main-app-btn{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    padding-left:10px;
+    padding-right:10px;
+    
+  }
+
+  .top-btn-box{
+    width: 25%;
+    display: flex;
+  }
+
+
+  /* 아이콘 */
+  .main-top-icon{
+    background: #fff;
+    border-radius: 50%;
+    padding: 7px;
+    color: #9a55ff;
+    float:left;
+    vertical-align: middle;
+    margin-right: 10px;
+  }
+
+
+  .top-btn-box .btn-info{
+    background: #047edf;
+  }
+
+  .top-btn-box .btn-primary{
+    background: #9a55ff;
+  }
+
+
+/* 동적으로 움직이는 카드바디 */
+   #my-app-list {
+    transform: translateY(0%);   
+    transition: .5s;
+    /* width: 916.41px;  */
+    /* position:absolute; */
+
+  }
+
+  #my-app-list.active {
+     transform: translateY(-107.5%); 
+     transition: .5s;
+    /* position:absolute; 
+    left:15%;
+    top:26%; */
+  }
+
+  #material-product-amount.active{
+    transition: .5s;
+    transform: translateY(107.5%);
+  }
+  
+  #material-product-amount{
+    transition: .5s;
+    transform: translate(0,0);
+  }
+  
+  #material-product-amount.green{
+    transition: .5s;
+    transform: translate(100%,107.5%);
+  }
+
+  
+
+ 
+
+ 
+  #app-list {
+    transform: translate(0,0);  
+    transition: .5s;
+  
+  }
+
+  #app-list.active {
+    transition: .5s;
+    transform: translate(-100%,-107.5%);
+  }
+
+
+
+  #material-product-amount.blue{
+    transition: 0.75s;
+    transform: translateY(215.5%);
+  }
+
+  #message-list {
+    transform: translateY(0%);   
+    transition: 0.75s;
+  }
+
+  #message-list.active {
+    transform: translateY(-215.5%); 
+    transition: 0.75s;
+  }
+
+
+   #material-product-amount.red{
+    transition: 0.75s;
+    transform: translate(100%,215.5%);
+  }
+  #notice-list {
+    transform: translate(0,0);  
+    transition: 0.75s;
+   
+  }
+
+  #notice-list.active {
+    transform: translate(-100%,-215.5%); 
+    transition: 0.75s;
+  }  
+ 
+
+
+

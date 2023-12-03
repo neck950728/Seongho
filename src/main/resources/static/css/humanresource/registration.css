@@ -1,0 +1,166 @@
+@charset "UTF-8";
+
+button#updateRole{
+    width:6%; height:40px;
+    float:right;
+    border:none;
+    background-color:#FF4444;
+    font-weight:600;
+    color:white;
+    cursor:pointer;
+}
+
+#updateRoleWindow{
+	width:700px; height:450px;
+    position:absolute;
+    top:50%; left:50%;
+    margin-left:-350px; margin-top:-225px;
+    z-index:10000;
+	border:1px solid #FF4444;
+	background-color:white;
+}
+
+#updateRoleWindow > #titleBar{
+    background-color:#FF4444;
+    padding:5px;
+    font-weight:400;
+    color:white;
+    cursor:move;
+}
+
+#updateRoleWindow > #titleBar > p{
+	display: inline-block;
+    font-size:14px;
+}
+
+#updateRoleWindow > #titleBar > #close{
+	width:20px;
+	float:right;
+	cursor:pointer;
+}
+
+#updateRoleWindow > #list{
+	height:84%;
+    padding:10px;
+    overflow-y:auto;
+}
+
+#updateRoleWindow > #list > table{
+	width:100%;
+}
+
+#updateRoleWindow > #list > table th,
+#updateRoleWindow > #list > table td{
+	width:20%; height:25px;
+	text-align:center;
+	border-collapse:collapse;
+	border:1px solid #CDCDCD;
+	font-size:14px;
+}
+
+#updateRoleWindow > #footer{
+	width:100%; height:9%;
+	display:flex;
+	align-items:center;
+	position:absolute;
+	bottom:0px;
+	border-top:1px solid #CDCDCD;
+}
+
+#updateRoleWindow > #footer > button{
+	width:70px; height:30px;
+	margin-left:10px;
+	border:none;
+	background-color:#FF4444;
+	font-size:13px; font-weight:600;
+	color:white;
+}
+
+
+
+table{
+	width:100%;
+}
+
+th, td{
+	width:16.7%; height:40px;
+	text-align:center;
+    border-collapse:collapse;
+	border:1px solid #CDCDCD;
+	font-size:14px;
+}
+
+form#registrationForm input,
+form#registrationForm select{
+    width:100%; height:100%;
+    padding:5px;
+    text-align:center;
+    border:none;
+}
+
+form#registrationForm select{
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	appearance:none;
+	background:white url("/images/humanResource/down_arrow.png") no-repeat 97% center / 13px 13px;
+}
+
+
+
+#basicInfo{
+    margin-top:50px;
+    margin-bottom:30px;
+}
+
+#basicInfo #profile{
+    position:relative;
+    background-color:white;
+}
+
+#profile > img{
+    width:150px;
+}
+
+#profile > input[type="file"]{
+    position:absolute;
+    cursor:pointer;
+    top:0; left:0;
+    opacity:0;
+}
+
+
+
+form#registrationForm > #buttons{
+    margin-top:30px;
+    text-align:center;
+}
+
+#buttons > button{
+    width:5%; height:40px;
+    border:none;
+    background-color:#90CAF9;
+    font-weight:600;
+    color:white;
+    cursor:pointer;
+}
+
+#buttons > #cancel{
+    margin-left:10px;
+    background-color:#A1A1A1;
+}
+
+
+
+#addressDetailModal img.close{
+	width:25px;
+	cursor:pointer;
+}
+
+#addressDetailModal #message-text{
+	height:35px;
+}
+
+#addressDetailModal #modal-submit{
+	background-color:#90CAF9;
+	border-color:unset;
+}

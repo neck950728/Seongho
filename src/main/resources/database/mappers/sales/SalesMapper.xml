@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ham.len.sales.SalesDAO">
+
+	<!-- 배차 신청 -->
+   <insert id="setCarReservationAdd" parameterType="CarReservationVO">
+		INSERT INTO CAR_RESERVATION 
+		values(0, #{employeeId}, #{carNo}, #{rentalDate}, #{rentalReasonCd}, #{rentalLocation}, #{returnDate}, #{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu});
+   </insert>
+   
+   <!-- 배차 신청시 CAR_STATUS_CD 업데이트 쿼리 -->
+   <update id="setCarListUpdateUnavailable" parameterType="CarListVO">
+   		UPDATE CAR_LIST SET CAR_STATUS_CD='C012'
+   		WHERE CAR_NO=#{carNo}
+   </update>
+
+   <!-- 배차 신청시 CAR_STATUS_CD 업데이트 쿼리2 -->
+   <update id="setCarListUpdateAvailable" parameterType="CarListVO">
+   		UPDATE CAR_LIST SET CAR_STATUS_CD='C011'
+   		WHERE CAR_NO=#{carNo}
+   </update>
+   
+   <!-- 배차 조회 -->
+   <select id="getReservationList" resultType="CarReservationVO">
+   		<!-- SELECT *, FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME FROM CAR_RESERVATION CR INNER JOIN HUMAN_RESOURCE HR
+   		ON CR.EMPLOYEE_ID=HR.EMPLOYEE_ID INNER JOIN CAR_LIST CL
+   		ON CR.CAR_NO = CL.CAR_NO
+   		WHERE CL.CAR_STATUS_CD='C012' -->
+   		<!-- SELECT *, FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME
+   		FROM CAR_RESERVATION CR INNER JOIN CAR_LIST CL
+		ON CR.CAR_NO = CL.CAR_NO INNER JOIN HUMAN_RESOURCE HR
+		ON CR.EMPLOYEE_ID = HR.EMPLOYEE_ID
+		WHERE CL.CAR_STATUS_CD='C012'
+	    GROUP BY CL.CAR_MODEL_NAME
+	    ORDER BY CR.RENTAL_NO DESC -->
+	    SELECT *,
+       FN_CODE_NM(LEFT(POSITION_CD, 3), POSITION_CD) AS CODE_NAME
+		FROM CAR_RESERVATION CR
+		INNER JOIN CAR_LIST CL ON CR.CAR_NO = CL.CAR_NO
+		INNER JOIN HUMAN_RESOURCE HR ON CR.EMPLOYEE_ID = HR.EMPLOYEE_ID
+		WHERE CL.CAR_STATUS_CD = 'C012'
+		      AND (CR.CAR_NO, CR.RENTAL_NO) IN (
+		          SELECT CAR_NO, MAX(RENTAL_NO) AS MAX_RENTAL_NO
+		          FROM CAR_RESERVATION
+		          WHERE CAR_STATUS_CD = 'C012'
+		          GROUP BY CAR_NO
+      );
+   </select>
+   
+   <!-- 배차 신청시 대여자 직급 -->
+   <select id="getPosition" parameterType="HumanResourceVO" resultType="HumanResourceVO">
+   		SELECT FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME FROM HUMAN_RESOURCE WHERE EMPLOYEE_ID=#{employeeID}
+   </select>
+   
+   <!-- 배차 수정 -->
+	<update id="setReservationUpdate" parameterType="CarReservationVO">
+		UPDATE CAR_RESERVATION SET
+  		EMPLOYEE_ID=#{employeeId}, CAR_NO=#{carNo}, RENTAL_DATE=#{rentalDate}, RENTAL_REASON_CD=#{rentalReasonCd}, RENTAL_LOCATION=#{rentalLocation}, RETURN_DATE=#{returnDate}
+  		WHERE RENTAL_NO=#{rentalNo}
+	</update>
+
+	<!-- 배차 삭제 -->
+	<delete id="setReservationDelete" parameterType="CarReservationVO">
+			DELETE FROM CAR_RESERVATION
+			WHERE RENTAL_NO=#{rentalNo}
+	</delete>
+
+	<!-- 차량 항목 조회 -->
+	<select id="getCarList" resultType="CarListVO">
+   		SELECT * FROM CAR_LIST
+   </select>
+   
+   <!-- 업데이트 전 정보 조회 -->
+   <select id="getTargetCar" parameterType="CarReservationVO" resultType="CarReservationVO">
+   		SELECT * FROM CAR_RESERVATION WHERE RENTAL_NO=#{rentalNo}
+   </select>
+   
+   <!-- 전체 대여 현황 -->
+   <select id="getAllReservation" resultMap="AllReservationList">
+   		<!-- SELECT CL.CAR_MODEL_NAME, CR.RENTAL_DATE, CR.RETURN_DATE, CR.EMPLOYEE_ID, CL.CAR_STATUS_CD, HR.NAME, FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME
+   		FROM CAR_RESERVATION CR INNER JOIN CAR_LIST CL
+		ON CR.CAR_NO = CL.CAR_NO INNER JOIN HUMAN_RESOURCE HR
+		ON CR.EMPLOYEE_ID = HR.EMPLOYEE_ID
+		WHERE CL.CAR_STATUS_CD='C012' -->
+		SELECT
+		    CL.CAR_MODEL_NAME,
+		    MAX(CR.RENTAL_DATE) AS RENTAL_DATE,
+		    MAX(CR.RETURN_DATE) AS RETURN_DATE,
+		    MAX(CR.EMPLOYEE_ID) AS EMPLOYEE_ID,
+		    CL.CAR_STATUS_CD,
+		    MAX(HR.NAME) AS NAME,
+		    MAX(FN_CODE_NM(LEFT(POSITION_CD, 3), POSITION_CD)) AS CODE_NAME
+		FROM
+		    CAR_RESERVATION CR
+		INNER JOIN CAR_LIST CL ON CR.CAR_NO = CL.CAR_NO
+		INNER JOIN HUMAN_RESOURCE HR ON CR.EMPLOYEE_ID = HR.EMPLOYEE_ID
+		WHERE
+		    CL.CAR_STATUS_CD = 'C012'
+		GROUP BY
+		    CL.CAR_MODEL_NAME, CL.CAR_STATUS_CD
+   </select>
+   
+   <resultMap id="AllReservationList" type="CarListVO">
+		<result property="carModelName" column="CAR_MODEL_NAME" />
+	    <result property="carStatusCd" column="CAR_STATUS_CD" />
+	    <result property="name" column="NAME" />
+	    <result property="codeName" column="CODE_NAME" />
+	    
+   
+   		<association javaType="CarReservationVO" property="carReservationVO">
+	        <result property="rentalDate" column="RENTAL_DATE" />
+	        <result property="returnDate" column="RETURN_DATE" />
+	        <result property="employeeId" column="EMPLOYEE_ID" />
+	    </association> 
+   </resultMap>
+   
+   <!-- 내 대여 현황 -->
+   <select id="getMyReservation" resultMap="MyReservationList" parameterType="CarReservationVO">
+   		SELECT CL.CAR_MODEL_NAME, CR.RENTAL_DATE, CR.RETURN_DATE, CL.CAR_STATUS_CD, CR.CAR_NO, CR.RENTAL_NO
+   		FROM CAR_RESERVATION CR INNER JOIN CAR_LIST CL
+		ON CR.CAR_NO = CL.CAR_NO WHERE CR.EMPLOYEE_ID=#{employeeId}
+   </select>
+   
+   <resultMap id="MyReservationList" type="CarListVO">
+		<result property="carModelName" column="CAR_MODEL_NAME" />
+	    <result property="carStatusCd" column="CAR_STATUS_CD" />
+	    <result property="carNo" column="CAR_NO" />
+   
+   		<association javaType="CarReservationVO" property="carReservationVO">
+	        <result property="rentalDate" column="RENTAL_DATE" />
+	        <result property="returnDate" column="RETURN_DATE" />
+	        <result property="rentalNo" column="RENTAL_NO" />
+	    </association> 
+   </resultMap>
+   
+   <!-- 자산 추가(차량) -->
+   <select id="getCarSort" resultType="CarListVO">
+   		SELECT * FROM CODE WHERE UP_CODE='C00'
+   </select>
+   
+   <!-- 자산 추가 관련 -->
+   <insert id="setCarAdd" parameterType="CarListVO">
+   		INSERT INTO CAR_LIST 
+		values(0, #{carModelCd}, #{carModelName}, 'C011', #{carReason}, #{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu})
+   </insert>
+   
+   <!-- 자산 상세 정보 -->
+   <select id="getCarDetail" parameterType="CarListVO" resultType="CarListVO">
+   		SELECT * FROM CAR_LIST WHERE CAR_NO=#{carNo}
+   </select>
+   
+   <!-- 자산 상세 수정 -->
+   <update id="setCarUpdate" parameterType="CarListVO">
+		UPDATE CAR_LIST SET
+  		CAR_MODEL_CD=#{carModelCd}, CAR_MODEL_NAME=#{carModelName}, CAR_STATUS_CD=#{carStatusCd}, CAR_REASON=#{carReason}
+  		WHERE CAR_NO=#{carNo}
+	</update>
+	
+	<!-- 자산 삭제 -->
+	<delete id="setCarDelete" parameterType="CarListVO">
+			DELETE FROM CAR_LIST
+			WHERE CAR_NO=#{carNo}
+	</delete>
+	
+	
+	
+
+	<!-- 영업관리 -->
+	
+	<!-- 거래처 조회 -->
+	<select id="getClientList" resultType="SalesClientVO">
+		SELECT *, FN_CODE_NM(LEFT(POSITION_CD, 3), POSITION_CD) AS CODE_NAME FROM CLIENT_LIST CL INNER JOIN HUMAN_RESOURCE HR 
+		ON CL.EMPLOYEE_ID = HR.EMPLOYEE_ID
+	</select>
+	
+	<!-- 거래처 추가(구분)  -->
+   <select id="getClientDivision" resultType="SalesClientVO">
+   		SELECT * FROM CODE WHERE UP_CODE='C02'
+   </select>
+   
+   <!-- 거래처 추가 -->
+   <insert id="setAddClient" parameterType="SalesClientVO">
+   		INSERT INTO CLIENT_LIST
+   		(
+   			CLIENT_NO, CLIENT_NAME, EMPLOYEE_ID, CLIENT_TYPE_CD, CLIENT_REPRESENT,
+   			CLIENT_NUMBER, CLIENT_ADDRESS, CLIENT_ZIPCODE, CLIENT_REF_ADDRESS, CLIENT_DETAIL_ADDRESS,
+   			CLIENT_DATE, CLIENT_INDUSTRY, CLIENT_MANAGER, CLIENT_PHONE, CLIENT_BANK, CLIENT_ACCOUNT_NO, CLIENT_BANK_NAME,
+   			REG_ID, REG_DATE, REG_MENU, MOD_ID, MOD_DATE, MOD_MENU
+   		)
+   		VALUES
+   		(
+	   		0, #{clientName}, #{employeeId}, #{clientTypeCd}, #{clientRepresent},
+	   		#{clientNumber}, #{clientAddress}, #{clientZipCode}, #{clientRefAddress}, #{clientDetailAddress}, 
+	   		#{clientDate}, #{clientIndustry}, #{clientManager}, #{clientPhone}, #{clientBank}, #{clientAccountNo}, #{clientBankName},
+	   		#{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu}
+   		)
+   </insert>
+   
+   <!-- 거래처 상세 정보 -->
+   <select id="getClientDetail" resultType="SalesClientVO">
+   		select DISTINCT CL.CLIENT_NO, CL.*, FN_CODE_NM(LEFT(POSITION_CD, 3), POSITION_CD) AS CODE_NAME from CLIENT_LIST CL INNER JOIN HUMAN_RESOURCE HR
+		ON CL.CLIENT_MANAGER = HR.NAME WHERE CLIENT_NO=#{clientNo}
+   </select>
+   
+   <!-- 거래처 상세 수정 -->
+   <update id="setClientUpdate" parameterType="SalesClientVO">
+   		UPDATE CLIENT_LIST SET
+   		CLIENT_NAME=#{clientName}, CLIENT_TYPE_CD=#{clientTypeCd}, CLIENT_ADDRESS=#{clientAddress}, 
+   		CLIENT_NUMBER=#{clientNumber}, CLIENT_MANAGER=#{clientManager}, CLIENT_PHONE=#{clientPhone}, 
+   		CLIENT_INDUSTRY=#{clientIndustry}, CLIENT_BANK=#{clientBank}, CLIENT_ACCOUNT_NO=#{clientAccountNo},
+   		CLIENT_BANK_NAME=#{clientBankName} 
+   		WHERE CLIENT_NO=#{clientNo}
+   </update>
+   
+   <!-- 거래처 상세 삭제 -->
+   <delete id="setClientDelete" parameterType="SalesClientVO">
+   		DELETE FROM CLIENT_LIST
+   		WHERE CLIENT_NO=#{clientNo}   
+   </delete>
+   
+   <!-- 구매 목록 -->
+   <select id="getPurchaseList" resultType="SalesPurchaseVO">
+   		SELECT *,FN_CODE_NM(LEFT(MATERIAL_PRODUCT_CD,3),MATERIAL_PRODUCT_CD) AS CODE_NAME FROM PURCHASE_MANAGEMENT PM INNER JOIN CLIENT_LIST CL
+   		ON PM.CLIENT_NO = CL.CLIENT_NO INNER JOIN MATERIAL_PRODUCT MP
+   		ON PM.MATERIAL_PRODUCT_NO = MP.MATERIAL_PRODUCT_NO
+   </select>
+   
+   <!-- 거래처 등록시 담당자 리스트 -->
+   <select id="getManagerList" resultType="HumanResourceVO">
+   		SELECT *, FN_CODE_NM(LEFT(POSITION_CD, 3), POSITION_CD) AS CODE_NAME FROM HUMAN_RESOURCE
+   </select>
+   
+   <!-- 담당자 선택시 연락처 가져오기 -->
+   <select id="getManagerPhone" resultType="HumanResourceVO">
+   		SELECT * FROM HUMAN_RESOURCE
+   </select>
+   
+   <!-- 연차 등록 -->
+   <insert id="setAddAnnual" parameterType="AnnualAddVO">
+   		INSERT INTO SCHEDULE VALUES (0, #{employeeId}, #{scheduleDate}, #{scheduleEndDate}, #{scheduleContents}, 1, #{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu})
+   </insert>
+   
+   <!-- 본인 연차 조회 -->
+   <select id="getAnnualList" resultType="AnnualAddVO" parameterType="AnnualAddVO">
+   		SELECT *,FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME FROM SCHEDULE SC INNER JOIN HUMAN_RESOURCE HR
+   		ON SC.EMPLOYEE_ID = HR.EMPLOYEE_ID WHERE SC.EMPLOYEE_ID=#{employeeId}
+   </select>
+   
+   <!-- 팀 연차 조회 -->
+   <select id="getTeamAnnualList" resultType="AnnualAddVO" parameterType="AnnualAddVO">
+   		SELECT *,FN_CODE_NM(LEFT(POSITION_CD,3),POSITION_CD) AS CODE_NAME FROM SCHEDULE SC INNER JOIN HUMAN_RESOURCE HR
+   		ON SC.EMPLOYEE_ID = HR.EMPLOYEE_ID WHERE (HR.DEPARTMENT_CD = (SELECT DEPARTMENT_CD FROM HUMAN_RESOURCE WHERE EMPLOYEE_ID=#{employeeId}))
+   </select>
+   
+   <!-- 연차 수정 -->
+   <update id="setUpdateAnnual" parameterType="AnnualAddVO">
+   		UPDATE SCHEDULE SET 
+   		SCHEDULE_DATE=#{scheduleDate}, SCHEDULE_END_DATE=#{scheduleEndDate}, SCHEDULE_CONTENTS=#{scheduleContents}
+   		WHERE EMPLOYEE_ID=#{employeeId}
+   </update>
+   
+   <!-- 연차 삭제 -->
+   <delete id="setDeleteAnnual" parameterType="AnnualAddVO">
+   		DELETE FROM SCHEDULE WHERE SCHEDULE_NO=#{scheduleNo}
+   </delete>
+</mapper>

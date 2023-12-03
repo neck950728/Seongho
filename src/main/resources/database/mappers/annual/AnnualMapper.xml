@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.ham.len.annual.AnnualDAO">
+	<select id="getMyAnnual" parameterType="Map" resultMap="getMyAnnualResult">
+		SELECT *
+			FROM ANNUAL_LEAVE al LEFT JOIN ANNUAL_LEAVE_OCCURRED_HISTORY aloh
+				ON al.EMPLOYEE_ID = aloh.EMPLOYEE_ID AND YEAR(aloh.OCCURRED_DATE) = #{year} LEFT JOIN ANNUAL_LEAVE_USED_HISTORY aluh
+				ON al.EMPLOYEE_ID = aluh.EMPLOYEE_ID AND YEAR(aluh.ANNUAL_LEAVE_START) = #{year}
+		WHERE al.EMPLOYEE_ID = #{employeeID}
+	</select>
+	
+	<resultMap id="getMyAnnualResult" type="AnnualVO">
+		<result column="EMPLOYEE_ID" property="employeeID" />
+		<result column="YEARS_OF_SERVICE" property="yearsOfService" />
+		<result column="OCCURRENCE_ANNUAL_LEAVE" property="occurrenceAnnualLeave" />
+		<result column="TOTAL_ANNUAL_LEAVE" property="totalAnnualLeave" />
+		<result column="USED_ANNUAL_LEAVE" property="usedAnnualLeave" />
+		<result column="HAVE_ANNUAL_LEAVE" property="haveAnnualLeave" />
+		
+		<collection property="annualLeaveOccurredHistorys" javaType="List" ofType="AnnualLeaveOccurredHistoryVO">
+			<id column="ANNUAL_LEAVE_OCCURRED_HISTORY_NO" property="annualLeaveOccurredHistoryNo" />
+			<result column="EMPLOYEE_ID" property="employeeID" />
+			<result column="OCCURRED_DATE" property="occurredDate" />
+			<result column="OCCURRED_TYPE" property="occurredType" />
+			<result column="OCCURRED_COUNT" property="occurredCount" />
+			<result column="DESCRIPTION" property="description" />
+		</collection>
+		
+		<collection property="annualLeaveUsedHistorys" javaType="List" ofType="AnnualLeaveUsedHistoryVO">
+			<id column="ANNUAL_LEAVE_USED_HISTORY_NO" property="annualLeaveUsedHistoryNo" />
+			<result column="EMPLOYEE_ID" property="employeeID" />
+			<result column="ANNUAL_LEAVE_START" property="annualLeaveStart" />
+			<result column="ANNUAL_LEAVE_END" property="annualLeaveEnd" />
+			<result column="USED_ANNUAL_LEAVE_COUNT" property="usedAnnualLeaveCount" />
+			<result column="REASON" property="reason" />
+		</collection>
+	</resultMap>
+	
+	<insert id="setAnnual" parameterType="AnnualVO">
+		INSERT INTO ANNUAL_LEAVE(EMPLOYEE_ID, REG_ID, REG_DATE, REG_MENU, MOD_ID, MOD_DATE, MOD_MENU)
+		VALUES(#{employeeID}, #{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu})
+	</insert>
+	
+	<select id="getTotal" parameterType="HumanResourcePager" resultType="Long">
+		SELECT COUNT(*)
+			FROM HUMAN_RESOURCE h LEFT JOIN ANNUAL_LEAVE a
+				ON h.EMPLOYEE_ID = a.EMPLOYEE_ID
+		<include refid="com.ham.len.humanresource.HumanResourceDAO.searchSQL">
+			<property name="dateColumn" value="JOIN_DATE" />
+			<property name="baseTableName" value="h." />
+		</include>
+	</select>
+	
+	<select id="getAnnualList" parameterType="HumanResourcePager" resultType="AnnualVO">
+		SELECT
+		h.EMPLOYEE_ID, FN_CODE_NM(LEFT(DEPARTMENT_CD, 3), DEPARTMENT_CD) AS DEPARTMENT_CD_NAME,
+		h.NAME, h.JOIN_DATE, h.QUIT_DATE, h.YEARS_OF_SERVICE,
+		a.OCCURRENCE_ANNUAL_LEAVE, a.TOTAL_ANNUAL_LEAVE, a.USED_ANNUAL_LEAVE, a.HAVE_ANNUAL_LEAVE
+			FROM HUMAN_RESOURCE h LEFT JOIN ANNUAL_LEAVE a
+				ON h.EMPLOYEE_ID = a.EMPLOYEE_ID
+		<include refid="com.ham.len.humanresource.HumanResourceDAO.searchSQL">
+			<property name="dateColumn" value="JOIN_DATE" />
+			<property name="baseTableName" value="h." />
+		</include>
+		LIMIT #{startRow}, 10
+	</select>
+	
+	<select id="getDepartmentalAnnualList" parameterType="String" resultType="AnnualExcelVO">
+		SELECT
+		h.EMPLOYEE_ID, FN_CODE_NM(LEFT(DEPARTMENT_CD, 3), DEPARTMENT_CD) AS DEPARTMENT_CD_NAME,
+		h.NAME, DATE_FORMAT(h.JOIN_DATE, '%Y-%m-%d') AS JOIN_DATE, DATE_FORMAT(h.QUIT_DATE, '%Y-%m-%d') AS QUIT_DATE,
+		h.YEARS_OF_SERVICE, a.OCCURRENCE_ANNUAL_LEAVE, a.TOTAL_ANNUAL_LEAVE, a.USED_ANNUAL_LEAVE, a.HAVE_ANNUAL_LEAVE
+			FROM HUMAN_RESOURCE h LEFT JOIN ANNUAL_LEAVE a
+				ON h.EMPLOYEE_ID = a.EMPLOYEE_ID
+		WHERE DEPARTMENT_CD = #{value}
+	</select>
+	
+	<update id="setUpdate" parameterType="AnnualVO">
+		UPDATE
+			ANNUAL_LEAVE
+		SET
+			OCCURRENCE_ANNUAL_LEAVE = #{occurrenceAnnualLeave},
+			TOTAL_ANNUAL_LEAVE = #{totalAnnualLeave},
+			HAVE_ANNUAL_LEAVE = #{haveAnnualLeave}
+		WHERE
+			EMPLOYEE_ID = #{employeeID}
+	</update>
+	
+	<insert id="setAnnualLeaveOccurredHistory" parameterType="AnnualLeaveOccurredHistoryVO">
+		INSERT INTO
+		ANNUAL_LEAVE_OCCURRED_HISTORY
+		(
+			ANNUAL_LEAVE_OCCURRED_HISTORY_NO, EMPLOYEE_ID,
+			OCCURRED_DATE, OCCURRED_TYPE, OCCURRED_COUNT, DESCRIPTION,
+			REG_ID, REG_DATE, REG_MENU, MOD_ID, MOD_DATE, MOD_MENU
+		)
+		VALUES
+		(
+			NULL, #{employeeID}, NOW(), #{occurredType}, #{occurredCount}, #{description},
+			#{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu}
+		)
+	</insert>
+	
+	<update id="setUpdateByUseAnnualLeave" parameterType="AnnualLeaveUsedHistoryVO">
+		UPDATE
+			ANNUAL_LEAVE
+		SET
+			USED_ANNUAL_LEAVE = USED_ANNUAL_LEAVE + #{usedAnnualLeaveCount},
+			HAVE_ANNUAL_LEAVE = HAVE_ANNUAL_LEAVE - #{usedAnnualLeaveCount}
+		WHERE
+			EMPLOYEE_ID = #{employeeID}
+	</update>
+	
+	<insert id="setAnnualLeaveUsedHistory" parameterType="AnnualLeaveUsedHistoryVO">
+		INSERT INTO
+		ANNUAL_LEAVE_USED_HISTORY
+		(
+			ANNUAL_LEAVE_USED_HISTORY_NO, EMPLOYEE_ID, ANNUAL_LEAVE_START, ANNUAL_LEAVE_END,
+			USED_ANNUAL_LEAVE_COUNT, REASON, REG_ID, REG_DATE, REG_MENU, MOD_ID, MOD_DATE, MOD_MENU
+		)
+		VALUES
+		(
+			NULL, #{employeeID}, #{annualLeaveStart}, #{annualLeaveEnd}, #{usedAnnualLeaveCount}, #{reason},
+			#{regId}, #{regDate}, #{regMenu}, #{modId}, #{modDate}, #{modMenu}
+		)
+	</insert>
+</mapper>
