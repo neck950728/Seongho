@@ -105,7 +105,7 @@
 
 |:hammer: Library & API|
 |:---:|
-```Lombok```, ```jQuery```, ```Jackson Databind```, ```Gson```, ```Javax Mail``` <br> ```WebSocket```, ```Commons FileUpload```, ```SweetAlert```, ```Fullcalendar``` <br> ```Daum Postcode```, ```JXLS```, ```iText7```, ```zTree```, ```Chart API```
+```Lombok```, ```jQuery```, ```Jackson Databind```, ```Gson```, ```Javax Mail``` <br> ```WebSocket```, ```Commons FileUpload```, ```SweetAlert```, ```Fullcalendar``` <br> ```Naver Smart Editor```, ```Daum Postcode```, ```JXLS```, ```iText7```, ```zTree```, ```Chart API```
 
 <br><br>
 
