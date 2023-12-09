@@ -156,10 +156,10 @@
 |---|---|
 <img src="https://github.com/neck950728/Seongho/assets/151998896/984f2058-4577-448e-aa9d-50d1d71f3ee5" width="387.5">|<img src="https://github.com/neck950728/Seongho/assets/151998896/6e8b0841-bf44-4c57-8778-6d1c30b410cd" width="387.5">|
 
-|코드/문서 양식 관리|인사 등록/조회|
+|코드/문서 관리|인사 등록/조회|
 |---|---|
 <img src="https://github.com/neck950728/Seongho/assets/151998896/3da6053e-c48e-4eeb-8e70-74dee5fa195a" width="387.5">|<img src="https://github.com/neck950728/Seongho/assets/151998896/707f2455-7ff7-4ebe-83e1-7de0dd4f8bda" width="387.5">|
 
-|발령 등록/조회|근태/연차 현황|
+|발령 등록/조회|전사 근태/연차 현황|
 |---|---|
 <img src="https://github.com/neck950728/Seongho/assets/151998896/4cb065bc-3f46-4f1f-9f84-2181884e51a3" width="387.5">|<img src="https://github.com/neck950728/Seongho/assets/151998896/27dfe162-edc2-4b18-8af7-77fccfbf0c75" width="387.5">|
