@@ -204,7 +204,7 @@ ul.nav-tabs {
 				             <td id="check" data-check="${vo.approvalStatusCd}">${vo.lastApprover}</td>
 				             <c:choose>
 				             <c:when test="${vo.approvalStatusCd eq 'R001'}">
-				             <td>기안중</td>
+				             <td>기안 중</td>
 				             </c:when>
 				             </c:choose>
 				             <td><a>기안서 확인</a></td>

@@ -12,7 +12,7 @@ $('.prior').each(function(){
         dropdown1.innerText=$(this).text();
         let priorCd='';
 
-        if(dropdown1.innerText.trim()=='일반공지'){
+        if(dropdown1.innerText.trim()=='일반 공지'){
             priorCd='B002';
         }else{
             priorCd='B001';

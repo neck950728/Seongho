@@ -47,8 +47,8 @@
     우선순위 선택
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdown1">
-    <a class="prior dropdown-item" >중요공지(필독)</a>
-    <a class="prior dropdown-item" >일반공지</a>
+    <a class="prior dropdown-item" >중요 공지(필독)</a>
+    <a class="prior dropdown-item" >일반 공지</a>
     <input type="hidden" id="prior" name="noticePriorityCd">
   </div>
 </div>

@@ -204,7 +204,7 @@ $('#app-save-btn').click(function(){
             if(result.trim()>0){
 				Swal.fire({
 					title:'저장 성공!',
-					text:'임시저장한 내용은 기안중 란에서 확인하실 수 있습니다.',
+					text:'임시저장한 내용은 기안 중 란에서 확인하실 수 있습니다.',
 					icon:'success'
 				}).then(function(){
 					location.href="/approval/list";

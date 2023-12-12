@@ -164,8 +164,8 @@ ul.nav-tabs {
 
 					<ul class="nav-tabs">
 						<!-- <li><a class="link-tab">전체</a></li>
-						<li><a class="link-tab">기안중</a></li>
-						<li><a class="link-tab">진행중</a></li>
+						<li><a class="link-tab">기안 중</a></li>
+						<li><a class="link-tab">진행 중</a></li>
 						<li><a class="link-tab">반려</a></li>
 						<li><a class="link-tab">결재</a></li> -->
 					</ul>

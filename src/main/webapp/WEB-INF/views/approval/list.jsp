@@ -63,8 +63,8 @@
 
 					<ul class="nav-tabs my-list-tabs">
 						<li onclick="location.href='./list'" class="active"><a class="link-tab">전체</a></li>
-						<!-- <li data-cd="R031"><a class="link-tab">기안중</a></li> -->
-						<li data-cd="R032"><a class="link-tab">진행중</a></li>
+						<!-- <li data-cd="R031"><a class="link-tab">기안 중</a></li> -->
+						<li data-cd="R032"><a class="link-tab">진행 중</a></li>
 						<li data-cd="R034"><a class="link-tab">반려</a></li>
 						<li data-cd="R033"><a class="link-tab">승인 완료</a></li>
 					</ul>	
@@ -106,10 +106,10 @@
 				             <td id="check" data-check="${vo.approvalStatusCd}">${vo.lastApproverName}</td>
 				             <td>
 				             <c:choose>
-									<c:when test="${vo.apCodeName eq '진행중'}"><label class="badge badge-gradient-info">${vo.apCodeName}</label></c:when>
+									<c:when test="${vo.apCodeName eq '진행 중'}"><label class="badge badge-gradient-info">${vo.apCodeName}</label></c:when>
 									<c:when test="${vo.apCodeName eq '반려'}"><label class="badge badge-gradient-danger">${vo.apCodeName}</label></c:when>
 									<c:when test="${vo.apCodeName eq '승인 완료'}"><label class="badge badge-gradient-success">${vo.apCodeName}</label></c:when>
-									<c:when test="${vo.apCodeName eq '기안중'}"><label class="badge badge-gradient-primary">${vo.apCodeName}</label></c:when>
+									<c:when test="${vo.apCodeName eq '기안 중'}"><label class="badge badge-gradient-primary">${vo.apCodeName}</label></c:when>
 																	
 									</c:choose>
 				             </td>
