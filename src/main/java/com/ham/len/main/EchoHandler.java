@@ -50,7 +50,7 @@ public class EchoHandler extends TextWebSocketHandler{
 	public void afterConnectionEstablished(WebSocketSession session) throws Exception {
 		String senderId = getMemberId(session); // 접속한 유저의 http세션을 조회하여 id를 얻는 함수
 		if(senderId!=null) {	// 로그인 값이 있는 경우만
-			log(senderId + " 연결 됨");
+			// log(senderId + " 연결 됨");
 			users.put(senderId, session);   // 로그인중 개별유저 저장
 		}
 	}
@@ -94,7 +94,7 @@ public class EchoHandler extends TextWebSocketHandler{
 	public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
 		String senderId = getMemberId(session);
 		if(senderId!=null) {	// 로그인 값이 있는 경우만
-			log(senderId + " 연결 종료됨");
+			// log(senderId + " 연결 종료됨");
 			users.remove(senderId);
 			users.remove(session);
 		}
@@ -102,7 +102,7 @@ public class EchoHandler extends TextWebSocketHandler{
 	// 에러 발생시
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
-		log(session.getId() + " 익셉션 발생: " + exception.getMessage());
+		// log(session.getId() + " 익셉션 발생: " + exception.getMessage());
 
 	}
 	// 로그 메시지
