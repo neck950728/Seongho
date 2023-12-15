@@ -136,9 +136,9 @@
 <br><br>
 
 ## :tv: <a id="screen-configuration">화면 구성</a>
-|메인|근태 관리|
+|로그인/메인|근태 관리|
 |---|---|
-|<img src="https://github.com/neck950728/Seongho/assets/151998896/383e18b3-2850-4a88-8a84-c584e43a9328" width="387.5">|<img src="https://github.com/neck950728/Seongho/assets/151998896/4446232b-bd17-4a05-917c-692e64969995" width="387.5">|
+|<img src="https://github.com/neck950728/Seongho/assets/151998896/72ce2aaf-dd94-4c56-8aa4-268a50427092" width="387.5">|<img src="https://github.com/neck950728/Seongho/assets/151998896/4446232b-bd17-4a05-917c-692e64969995" width="387.5">|
 
 |인사 관리|전자결재|
 |---|---|
