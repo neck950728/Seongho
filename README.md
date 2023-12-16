@@ -121,7 +121,7 @@
 ><p><strong>팀장</strong> : 김찬혁</p>
 > - 메인, 전자결재, 공지사항, 코드 관리, 문서 양식함, 알림
 
-><p><strong>팀원</strong> : 김민진</p>
+><p><strong>팀원</strong> : 김민진 :raising_hand_man:</p>
 > - 로그인, 근태/인사 관리, 인사 등록/조회, 발령 등록/조회, 전사 근태/연차 현황
 
 ><p><strong>팀원</strong> : 김성호</p>
