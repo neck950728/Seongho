@@ -3,7 +3,7 @@
 ---
 
 <div align="center">
-   <img src="https://github.com/neck950728/Seongho/assets/151998896/d733903a-743f-410b-b6d4-ca47721e5b16" width="18%">
+   <img src="https://github.com/user-attachments/assets/9f459628-7260-4d15-aec7-aba4de5334c3" width="18%">
    <h6><i>본 사이트는 상업적 목적이 아닌 개인 포트폴리오 용도로 제작되었습니다.</i></h6>
 </div>
 
