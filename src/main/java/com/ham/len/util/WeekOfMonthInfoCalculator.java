@@ -14,7 +14,7 @@ public class WeekOfMonthInfoCalculator {
 		int month = calendar.get(Calendar.MONTH) + 1;
 		int day = calendar.get(Calendar.DATE);
 		
-		// 한 주의 시작은 월요일이고, 첫 주에 4일 이상이 포함되어 있어야 첫 주 취급(목/금/토/일)
+		// 한 주의 시작은 월요일이고, 첫 주에 4일 이상이 포함되어 있어야 첫 주 취급(최소 : 목/금/토/일)
 		calendar.setFirstDayOfWeek(Calendar.MONDAY);
 		calendar.setMinimalDaysInFirstWeek(4);
 		
